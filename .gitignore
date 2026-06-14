@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# Raw datasets 
+dataset/
+
+# TensorBoard logs
+runs/
+
+# Model checkpoints 
+checkpoints/*
+!checkpoints/lcnn_multi_attentive_v1_best.pt
