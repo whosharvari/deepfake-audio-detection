@@ -1,32 +1,3 @@
-"""Streamlit demo for the Deepfake Audio Detection project (MARS Open Projects 2026).
-
-Architecture
-------------
-Single-page app (``st.tabs``) on top of the existing, already-verified
-pipeline — no new model/preprocessing code:
-
-- **Predict**: upload a wav/mp3/flac clip, run it through
-  ``predict.predict_file`` (Model 1 / LCNN, multi+attentive), and display the
-  prediction, calibrated confidence, EER threshold, the fixed 3-second
-  model-input waveform, and its Log-Mel/LFCC spectrograms.
-- **Model Info**: architecture summary + live parameter count and training
-  configuration for the loaded LCNN.
-- **Metrics / Cross-Dataset / Ablation**: read-only dashboards over
-  ``reports/lcnn_primary_results.json``, ``reports/cross_dataset_results.csv``
-  and ``reports/ablation_results.csv``.
-
-Tradeoffs
----------
-- CPU-only friendly: ``predict.load_model`` uses ``get_device()`` which falls
-  back to CPU automatically (Streamlit Cloud has no GPU/MPS).
-- The model and static reports are cached (``st.cache_resource`` /
-  ``st.cache_data``) so re-running predictions doesn't reload the checkpoint
-  or re-parse JSON/CSV on every interaction.
-- Every report/checkpoint load is wrapped so a missing file degrades to an
-  ``st.info``/``st.warning`` placeholder instead of crashing the app, in case
-  a report or checkpoint is absent on a fresh checkout.
-"""
-
 from __future__ import annotations
 
 import json
@@ -38,25 +9,21 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import streamlit as st
 
-# `streamlit run app/streamlit_app.py` puts `app/` (not the project root) on
-# sys.path[0]; add the project root so `predict` and `src` are importable
-# regardless of the working directory (local dev or Streamlit Cloud).
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.config import AUDIO_EXTENSIONS, REPORTS_DIR, SAMPLE_RATE, TARGET_LENGTH_SECONDS  # noqa: E402
-from src.data.features import get_feature_extractor  # noqa: E402
-from src.data.preprocessing import fix_length, load_audio  # noqa: E402
+from src.config import AUDIO_EXTENSIONS, REPORTS_DIR, SAMPLE_RATE, TARGET_LENGTH_SECONDS  
+from src.data.features import get_feature_extractor  
+from src.data.preprocessing import fix_length, load_audio  
 
-import predict  # noqa: E402
+import predict  
 
 st.set_page_config(page_title="Deepfake Audio Detection", layout="wide")
 
 
 @st.cache_resource(show_spinner="Loading LCNN model...")
 def _load_predictor():
-    """Returns ``(model, device, eer_threshold, error)``; `error` is ``None`` on success."""
     try:
         model, device = predict.load_model()
     except FileNotFoundError as exc:
@@ -258,7 +225,7 @@ def render_ablation_tab() -> None:
 
 def main() -> None:
     st.title("Deepfake Audio Detection")
-    st.caption("MARS Open Projects 2026 - Problem Statement 2 (Genuine vs. AI-generated speech)")
+    st.caption("Genuine vs. AI-generated speech")
 
     tabs = st.tabs(["Predict", "Model Info", "Metrics", "Cross-Dataset", "Ablation"])
     with tabs[0]:

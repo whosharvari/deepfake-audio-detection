@@ -37,6 +37,10 @@ Binary classification of speech clips as **Genuine** (real human speech) or
 
 ---
 
+[![Streamlit App](https://img.shields.io/badge/Streamlit-Live%20App-FF4B4B?logo=streamlit)](https://deepfake-audio-detection-mars.streamlit.app/)
+
+---
+
 ## Key Results
 
 All results below are for the primary model (`lcnn_multi_attentive_v1`,
@@ -685,7 +689,8 @@ PYTHONPATH=. streamlit run app/streamlit_app.py
    - **not** `dataset/` (excluded via `.gitignore`).
 2. On [share.streamlit.io](https://share.streamlit.io), create a new app
    pointing at `app/streamlit_app.py`.
-3. No secrets or environment variables are required.
+   Live deployment: https://deepfake-audio-detection-mars.streamlit.app/
+4. No secrets or environment variables are required.
 
 **Notes**:
 
